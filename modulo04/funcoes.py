@@ -77,3 +77,28 @@ def read_csv_dict(name_file: str, sep=','):
                     infos[i] = infos[i][:-1]
                 dados[fields[i]].append(infos[i])
     return dados
+
+def classifica_trabalho(remote_ratio: int):
+    """
+    Lê um valor inteiro e com base nele, retorna se o trabalho é remoto, presencial ou híbrido. O valor é percentual. Se a pessoal trabalha 0% remoto, então ele trabalha presencial. Se ele trabalha 100% remoto, esse é o seu regime e, caso ele trabalhe entre 1% e 99% remoto, seu trabalho é híbrido.
+
+    Args:
+        remote_ratio (int): O valor a ser considerado pela função para determinar se o trabalho é remoto.
+
+    Returns:
+        str: uma string com a informação sobre o tipo de trabalho que a pessoa desempenha: Remoto, Presencial ou Híbrido.
+
+    Example:
+        >>> classificacao = classifica_trabalho(93)
+        >>> print(f"Classificação: {classificacao}.")
+        Classificação: Híbrido.
+    """
+    if remote_ratio == 100:
+        return 'Remoto'
+    if remote_ratio == 0:
+        return 'Presencial'
+    
+    return 'Híbrido'
+
+
+print
