@@ -100,5 +100,6 @@ def classifica_trabalho(remote_ratio: int):
     
     return 'Híbrido'
 
+sqrt = lambda x: x ** (1/2)
 
-print
+distancia_quadrado = lambda x, media: (x-media) ** 2
