@@ -1,30 +1,3 @@
-def convert_to_number(dicionario: dict, field: str):
-    """
-    Converte os valores de uma lista dentro de um dicionário de strings para números.
-
-    Tenta avaliar cada string do campo usando ast.literal_eval, preservando valores
-    que não podem ser avaliados. Não altera o dicionário original — retorna uma cópia.
-
-    Args:
-        dicionario (dict): Dicionário cujas colunas são listas de strings.
-        field (str): Nome do campo a ser convertido.
-
-    Returns:
-        dict: Cópia do dicionário com o campo convertido para números quando possível.
-
-    Raises:
-        KeyError: Se o campo não existir no dicionário.
-
-    Example:
-        >>> dados = {'preco': ['1', '2.5', "'x'"]}
-        >>> convert_to_number(dados, 'preco')
-        {'preco': [1, 2.5, 'x']}
-    """
-    dados = dicionario
-    campo_tratado = [eval(x) for x in dados[field]]
-    dados[field] = campo_tratado
-
-
 def read_csv_dict(name_file: str, sep=','):
     """
     Lê um arquivo CSV e converte seus dados em um dicionário de listas.
@@ -78,6 +51,32 @@ def read_csv_dict(name_file: str, sep=','):
                 dados[fields[i]].append(infos[i])
     return dados
 
+def convert_to_number(dicionario: dict, field: str):
+    """
+    Converte os valores de uma lista dentro de um dicionário de strings para números.
+
+    Tenta avaliar cada string do campo usando ast.literal_eval, preservando valores
+    que não podem ser avaliados. Não altera o dicionário original — retorna uma cópia.
+
+    Args:
+        dicionario (dict): Dicionário cujas colunas são listas de strings.
+        field (str): Nome do campo a ser convertido.
+
+    Returns:
+        dict: Cópia do dicionário com o campo convertido para números quando possível.
+
+    Raises:
+        KeyError: Se o campo não existir no dicionário.
+
+    Example:
+        >>> dados = {'preco': ['1', '2.5', "'x'"]}
+        >>> convert_to_number(dados, 'preco')
+        {'preco': [1, 2.5, 'x']}
+    """
+    dados = dicionario
+    campo_tratado = [eval(x) for x in dados[field]]
+    dados[field] = campo_tratado
+
 def classifica_trabalho(remote_ratio: int):
     """
     Lê um valor inteiro e com base nele, retorna se o trabalho é remoto, presencial ou híbrido. O valor é percentual. Se a pessoal trabalha 0% remoto, então ele trabalha presencial. Se ele trabalha 100% remoto, esse é o seu regime e, caso ele trabalhe entre 1% e 99% remoto, seu trabalho é híbrido.
@@ -103,3 +102,58 @@ def classifica_trabalho(remote_ratio: int):
 sqrt = lambda x: x ** (1/2)
 
 distancia_quadrado = lambda x, media: (x-media) ** 2
+
+def medidas_resumo(lista: list):
+    """
+    Calcula métricas estatísticas descritivas básicas a partir de uma lista de números.
+
+    Esta função processa um conjunto de dados para extrair quatro medidas fundamentais:
+    a contagem de elementos, a soma total, a média aritmética e a variância populacional.
+
+    Funcionamento Matemático:
+    --------------------------
+    1. Contagem (n): Identifica o tamanho da amostra ou população.
+    2. Total (Σx): Soma todos os valores contidos na lista.
+    3. Média (μ): Divide o total pela contagem.
+    4. Variância (σ²): Calcula a dispersão dos dados em relação à média. 
+       Utiliza a fórmula da variância populacional: 
+       σ² = Σ(xi - μ)² / n
+
+    Parâmetros:
+    -----------
+    lista : list
+        Uma lista de números (inteiros ou decimais). 
+        Nota: Requer que a função 'distancia_quadrado(x, media)' esteja 
+        definida no escopo global para calcular o desvio de cada ponto.
+
+    Retorna:
+    --------
+    contagem : int
+        O número total de elementos na lista.
+    total : float
+    	A soma de todos os elementos.
+    media : float
+        A média aritmética dos valores.
+    varp : float
+        A variância populacional dos dados.
+
+    Exemplo de Uso:
+    ---------------
+    >>> # Se distancia_quadrado(x, m) for (x - m)**2
+    >>> medidas_resumo([2, 4, 6])
+    (3, 12, 4.0, 2.6666666666666665)
+
+    Observação:
+    -----------
+    A função calcula a variância DIVIDINDO PELO NÚMERO TOTAL (n). Isso a 
+    caracteriza como Variância Populacional. Se o objetivo for calcular a 
+    Variância Amostral (onde os dados são apenas uma parte de um todo), 
+    geralmente divide-se por (n - 1).
+    """
+    contagem = len(lista)
+    total = sum(lista)
+    media = total / contagem
+    diff_quadrado = [distancia_quadrado(x, media) for x in lista]
+    sum_diff_quadrado = sum(diff_quadrado)
+    varp = sum_diff_quadrado / contagem
+    return contagem, total, media, varp
