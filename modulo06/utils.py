@@ -1,3 +1,5 @@
+import requests
+
 def read_csv_dict(name_file: str, sep=','):
     """
     Lê um arquivo CSV e converte seus dados em um dicionário de listas.
@@ -76,3 +78,38 @@ def convert_to_number(dicionario: dict, field: str):
     dados = dicionario
     campo_tratado = [eval(x) for x in dados[field]]
     dados[field] = campo_tratado
+
+def get_cotacao_data_especifica(data_cotacao: str):
+    """
+    Consulta a cotação de compra do dólar em uma data específica via API do Banco Central.
+
+    A função trata a string de data para garantir que o formato enviado à API 
+    seja o esperado (MM-DD-AAAA), mesmo que o usuário forneça no padrão brasileiro.
+
+    Args:
+        data_cotacao (str): A data desejada no formato 'DD-MM-AAAA' ou 'MM-DD-AAAA'.
+            O código possui uma lógica interna para inverter dia e mês caso o 
+            primeiro bloco seja maior que 12.
+
+    Returns:
+        float: O valor da cotação de compra do dólar para a data informada.
+
+    Raises:
+        requests.exceptions.RequestException: Se houver erro na requisição HTTP.
+        KeyError: Se a data informada não possuir cotação disponível (ex: finais de semana).
+        IndexError: Se a resposta da API vier vazia.
+    """
+    data = data_cotacao
+    if int(data_cotacao[0:2]) > 12:
+        data = f'{data_cotacao[3:5]}-{data_cotacao[0:2]}-{data_cotacao[6:10]}'
+
+    url = f"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao=%27{data}%27&$format=json"
+    
+    response = requests.get(url)
+    dados = response.json()
+    return dados['value'][0]['cotacaoCompra']
+
+
+# if __name__ == '__main__': 
+#     import requests
+#     print(get_cotacao_data_especifica('07-08-2024'))
