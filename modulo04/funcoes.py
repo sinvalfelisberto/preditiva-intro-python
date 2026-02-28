@@ -103,6 +103,8 @@ sqrt = lambda x: x ** (1/2)
 
 distancia_quadrado = lambda x, media: (x-media) ** 2
 
+f = lambda x: 'Presencial' if x == 0 else 'Remoto' if x == 100 else 'Híbrido'
+
 def medidas_resumo(lista: list):
     """
     Calcula métricas estatísticas descritivas básicas a partir de uma lista de números.
@@ -157,3 +159,20 @@ def medidas_resumo(lista: list):
     sum_diff_quadrado = sum(diff_quadrado)
     varp = sum_diff_quadrado / contagem
     return contagem, total, media, varp
+
+def distinct_groups(lista: list):
+    """
+    Recebe uma lista como parâmentro e retorna um conjunto com os itens distintos.
+
+    Args:
+        lista (list): A lista que contém as informações duplicadas.
+
+    Returns:
+        list: Uma lista com itens únicos.
+
+    Example:
+        >>> itens_distintos = distinct_groups(['Remoto', 'Remoto', 'Remoto', 'Híbrido', 'Presencial', 'Híbrido', 'Remoto'])
+        >>> print(itens_distintos)
+        ['Remoto', 'Híbrido', 'Presencial']
+    """
+    return list(set(lista))
